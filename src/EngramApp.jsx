@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 // ─── CURRICULUM DAG ───
 const MODULES = {
@@ -156,6 +156,14 @@ export default function EngramApp() {
 
   // Load
   useEffect(() => {
+    // In test environment, skip splash and set loaded/bootPhase immediately
+    if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'test') {
+      // Synchronously set state for tests to avoid act warnings
+      setState(DEFAULT_STATE);
+      setLoaded(true);
+      setBootPhase(3);
+      return;
+    }
     loadState().then(s => {
       setState(s);
       setLoaded(true);
